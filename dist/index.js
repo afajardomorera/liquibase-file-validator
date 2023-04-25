@@ -9968,47 +9968,59 @@ const core = __nccwpck_require__(7317);
 const github = __nccwpck_require__(7422);
 const fs = __nccwpck_require__(7147);
 const readline = __nccwpck_require__(4521);
+const nReadlines = __nccwpck_require__(6641);
 
 try {
   // `who-to-greet` input defined in action metadata file
   const fileToRead = core.getInput('file');
   console.log(`FileToRead: ${fileToRead}`);
   
-  const nReadlines = __nccwpck_require__(6641);
-  const broadbandLines = new nReadlines(fileToRead);
+  if (fs.existsSync(fileToRead)) {
+    console.log("EXISTE");
+    const broadbandLines = new nReadlines(fileToRead);
 
-  let line;
-  let lineNumber = 1;
-  let cont = 0;
-  const valid = new Boolean(false);
+    let line;
+    let lineNumber = 1;
+    let cont = 0;
+    const valid = new Boolean(false);
 
-  while (line = broadbandLines.next() && lineNumber < 11) {
-    console.log(`Line ${lineNumber} has: ${line.toString('utf-8')}`);
-    if(line.toString().includes('--liquibase-format')){
-      console.log("ENTRA FORMAT");
-      cont++;
+    while (line = broadbandLines.next() && lineNumber < 11) {
+      console.log(`Line ${lineNumber} has: ${line.toString('ascii')}`);
+      if(line.toString().includes('--liquibase-format')){
+        console.log("ENTRA FORMAT");
+        cont++;
+      }
+      if(line.toString().includes('--changeset')){
+        console.log("ENTRA CHANGESET");
+        cont++;
+      }
+      console.log("SIGUIENTE LINEA");
+      lineNumber++;
     }
-    if(line.toString().includes('--changeset')){
-      console.log("ENTRA CHANGESET");
-      cont++;
+    
+    console.log(`CONTADOR1: ${cont}`);
+    if(cont == 2){
+      console.log("SE PONE VALID A TRUE");
+      valid = new Boolean(true);
+    }else{
+      console.log(`CONTADOR2: ${cont}`);
     }
-    lineNumber++;
-  }
-
-  if(cont == 2){
-    console.log("VALIDO");
-    valid = new Boolean(true);
-  }
-  const validFiles = [];
-  const invalidFiles = [];
-  
-  if(valid){
-    validFiles.push(fileToRead);
+    const validFiles = [];
+    const invalidFiles = [];
+    
+    if(valid){
+      console.log(`VALIDO`);
+      validFiles.push(fileToRead);
+    }else{
+      console.log(`NO VALIDO`);
+      invalidFiles.push(fileToRead);
+    }
+    core.setOutput("validFiles", validFiles);
+    core.setOutput("invalidFiles", invalidFiles);
   }else{
-    invalidFiles.push(fileToRead);
+    console.log("NO EXISTE");
   }
-  core.setOutput("validFiles", validFiles);
-  core.setOutput("invalidFiles", invalidFiles);
+
 } catch (error) {
   core.setFailed(error.message);
 }
