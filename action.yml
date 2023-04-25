@@ -1,13 +1,14 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Liquibase Validation'
+description: 'Check if a liquibase script has -- liquibase-format and -- changeset instructions'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  file:  # filename to read
+    description: 'the filename o read'
     required: true
-    default: 'World'
 outputs:
-  time: # id of output
-    description: 'The time we greeted you!'
+  validFiles: # id of output
+    description: 'Array of valid Files'
+  invalidFiles: # id of output
+    description: 'Array of invalid Files'
 runs:
   using: 'node16'
   main: 'dist/index.js'
