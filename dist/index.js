@@ -9700,6 +9700,14 @@ module.exports = require("punycode");
 
 /***/ }),
 
+/***/ 4521:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("readline");
+
+/***/ }),
+
 /***/ 2781:
 /***/ ((module) => {
 
@@ -9791,16 +9799,38 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(7317);
 const github = __nccwpck_require__(7422);
+const fs = __nccwpck_require__(7147);
+const readline = __nccwpck_require__(4521);
 
 try {
   // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  const fileToRead = core.getInput('file');
+  console.log(`FileToRead: ${fileToRead}`);
+  
+  const fileStream = fs.createReadStream(fileToRead);
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity
+  });
+
+  const validFiles = [];
+  const invalidFiles = [];
+  const valid = new Boolean(false);
+
+  for (const line of rl){
+    console.log(`line: ${rl}`);
+    if(rl.includes('-- liquibase-format')){
+      valid = new Boolean(true);
+    }
+  }
+
+  if(valid){
+    validFiles.push(fileToRead);
+  }else{
+    invalidFiles.push(fileToRead);
+  }
+  core.setOutput("validFiles", validFiles);
+  core.setOutput("invalidFiles", invalidFiles);
 } catch (error) {
   core.setFailed(error.message);
 }
