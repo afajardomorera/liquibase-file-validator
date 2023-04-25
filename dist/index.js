@@ -9620,6 +9620,14 @@ module.exports = eval("require")("encoding");
 
 /***/ }),
 
+/***/ 9825:
+/***/ ((module) => {
+
+module.exports = eval("require")("n-readlines");
+
+
+/***/ }),
+
 /***/ 9491:
 /***/ ((module) => {
 
@@ -9807,23 +9815,28 @@ try {
   const fileToRead = core.getInput('file');
   console.log(`FileToRead: ${fileToRead}`);
   
-  const fileStream = fs.createReadStream(fileToRead);
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity
-  });
+  const nReadlines = __nccwpck_require__(9825);
+  const broadbandLines = new nReadlines(fileToRead);
 
-  const validFiles = [];
-  const invalidFiles = [];
+  let line;
+  let lineNumber = 1;
+  let cont = 0;
   const valid = new Boolean(false);
 
-  for (const line of rl){
-    console.log(`line: ${rl}`);
+  while (line = broadbandLines.next() && lineNumber < 11) {
+    console.log(`Line ${lineNumber} has: ${line.toString('ascii')}`);
     if(rl.includes('-- liquibase-format')){
-      valid = new Boolean(true);
+      cont++;
     }
+    lineNumber++;
   }
 
+  if(cont == 2){
+    valid = new Boolean(true);
+  }
+  const validFiles = [];
+  const invalidFiles = [];
+  
   if(valid){
     validFiles.push(fileToRead);
   }else{
