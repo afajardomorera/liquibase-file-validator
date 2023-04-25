@@ -17,8 +17,8 @@ try {
   const valid = new Boolean(false);
 
   while (line = broadbandLines.next() && lineNumber < 11) {
-    console.log(`Line ${lineNumber} has: ${line.toString('ascii')}`);
-    if(rl.includes('-- liquibase-format')){
+    console.log(`Line ${lineNumber} has: ${line.toString()}`);
+    if(line.toString().includes('-- liquibase-format')){
       cont++;
     }
     lineNumber++;
