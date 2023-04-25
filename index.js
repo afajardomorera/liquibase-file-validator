@@ -17,14 +17,20 @@ try {
   const valid = new Boolean(false);
 
   while (line = broadbandLines.next() && lineNumber < 11) {
-    console.log(`Line ${lineNumber} has: ${line.toString()}`);
-    if(line.toString().includes('-- liquibase-format')){
+    console.log(`Line ${lineNumber} has: ${line.toString('utf-8')}`);
+    if(line.toString().includes('--liquibase-format')){
+      console.log("ENTRA FORMAT");
+      cont++;
+    }
+    if(line.toString().includes('--changeset')){
+      console.log("ENTRA CHANGESET");
       cont++;
     }
     lineNumber++;
   }
 
   if(cont == 2){
+    console.log("VALIDO");
     valid = new Boolean(true);
   }
   const validFiles = [];
