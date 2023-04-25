@@ -18,7 +18,7 @@ try {
   const invalidFiles = [];
   const valid = new Boolean(false);
 
-  for await (const line of rl){
+  for (const line of rl){
     console.log(`line: ${rl}`);
     if(rl.includes('-- liquibase-format')){
       valid = new Boolean(true);

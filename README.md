@@ -8,6 +8,7 @@ https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
 
 >GIT COMMANDS FOR TAG GENERATION
 ```
+ncc build index.js --license licenses.txt
 git add .
 git commit -m "COMMIT COMMENT"
 git tag -a -m "TAG DESCRIPTION" vx.y
